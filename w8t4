@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Brief description of your script
+# Copyright 2022 simian
+
+while getopts d: flag
+do
+    case "${flag}" in
+        d) DIR=${OPTARG};;
+    esac
+done
+
+if [[ -z "${DIR+set}" ]]; then
+    DIR="/kb/init";
+fi
+
+echo "ConfigMap dir is: $DIR"
+
+for f in $DIR/*; do
+    HOST=$(basename $f);
+    PORT=$(cat $f)
+    echo "Value of $HOST is $PORT."
+    wait-for-it.sh -h $HOST -p $PORT -t 0
+done
+
+#function main() {
+#  echo "ConfigMap dir is: $DIR";
+#}
+#
+#main "$@"
