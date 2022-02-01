@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-# Brief description of your script
-# Copyright 2022 simian
+# A simple Bash script is used to manage startup dependencies in the Rancher 2 environment.
+# This script is used by the KBase init-sidecar image.
+#
 set -e
 
 function setDir() {
@@ -13,7 +14,7 @@ function setDir() {
     done
 
   if [[ -z "${DIR+set}" ]]; then
-      DIR="/kb/init";
+      DIR="/kb/init/w8s4";
   fi
   
   echo "ConfigMap dir is: $DIR"
