@@ -19,7 +19,7 @@ function setDir() {
   echo "ConfigMap dir is: $DIR"
 }
 
-function w8t4() {
+function w8s4() {
   if [ ! -d $DIR ]; then
     echo "Directory $DIR does not exist. Exiting.";
     exit 1
@@ -40,7 +40,7 @@ function w8t4() {
 
 function main() {
   setDir
-  w8t4
+  w8s4
 }
 
 main "$@"
