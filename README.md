@@ -8,7 +8,7 @@ This script is used by the KBase [init-sidecar](https://github.com/kbase/init-si
 usage: w8s4 [-d <ConfigMap Path>]
 ```
 
-**Note:** The ConfigMap path will default to `/kb/init` if not specified.
+**Note:** The ConfigMap path will default to `/kb/init/w8s4` if not specified.
 
 ### Process
 
