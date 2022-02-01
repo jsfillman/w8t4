@@ -2,29 +2,45 @@
 #
 # Brief description of your script
 # Copyright 2022 simian
+set -e
 
-while getopts d: flag
-do
-    case "${flag}" in
-        d) DIR=${OPTARG};;
-    esac
-done
+function setDir() {
+  while getopts d: flag
+    do
+        case "${flag}" in
+            d) DIR=${OPTARG};;
+        esac
+    done
 
-if [[ -z "${DIR+set}" ]]; then
-    DIR="/kb/init";
-fi
+  if [[ -z "${DIR+set}" ]]; then
+      DIR="/kb/init";
+  fi
+  
+  echo "ConfigMap dir is: $DIR"
+}
 
-echo "ConfigMap dir is: $DIR"
+function w8t4() {
+  if [ ! -d $DIR ]; then
+    echo "Directory $DIR does not exist. Exiting.";
+    exit 1
+  fi
 
-for f in $DIR/*; do
-    HOST=$(basename $f);
+  if ! hash wait-for-it.sh 2>/dev/null; then
+    echo "'wait-for-it.sh' was not found in PATH. Exiting";
+    exit 1
+  fi
+
+  for f in $DIR/*; do
+    HOST=$(basename $f)
     PORT=$(cat $f)
     echo "Value of $HOST is $PORT."
     wait-for-it.sh -h $HOST -p $PORT -t 0
-done
+  done
+}
 
-#function main() {
-#  echo "ConfigMap dir is: $DIR";
-#}
-#
-#main "$@"
+function main() {
+  setDir
+  w8t4
+}
+
+main "$@"
