@@ -5,40 +5,42 @@
 #
 set -e
 
+# Checks for `-d` flag to set $DIR to correct ConfigMap mount dir.
+# If no flag is set, defaults to `/kb/init/w8s4`
 function setDir() {
   while getopts d: flag
     do
         case "${flag}" in
             d) DIR=${OPTARG};;
+            *) echo "Using default ConfigMap location '/kb/init/w8s4'. Use the '-d' flag to override default.";;
         esac
     done
-
   if [[ -z "${DIR+set}" ]]; then
       DIR="/kb/init/w8s4";
   fi
-  
   echo "ConfigMap dir is: $DIR"
 }
 
+# Checks for ConfigMap mount dir and presence of `wait-for-it.sh` script.
+# If both are present, run's `wait-for-it.sh` for every entry in $DIR
 function w8s4() {
   if [ ! -d $DIR ]; then
     echo "Directory $DIR does not exist. Exiting.";
     exit 1
   fi
-
   if ! hash wait-for-it.sh 2>/dev/null; then
     echo "'wait-for-it.sh' was not found in PATH. Exiting";
     exit 1
   fi
-
   for f in $DIR/*; do
     HOST=$(basename $f)
     PORT=$(cat $f)
-    echo "Value of $HOST is $PORT."
+    echo "Checking for $HOST on port $PORT."
     wait-for-it.sh -h $HOST -p $PORT -t 0
   done
 }
 
+# Does the thing!
 function main() {
   setDir
   w8s4
